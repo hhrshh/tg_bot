@@ -1,0 +1,28 @@
+# ======================
+# Сборка CMake / IDE
+# ======================
+
+# папка сборки
+/build/
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+CMakeScripts/
+
+# VSCode
+.vscode/
+
+# ======================
+# Компилированные бинарники
+# ======================
+*.exe
+*.obj
+*.pdb
+*.lib
+*.dll
+
+# config с токеном
+include/config.h
