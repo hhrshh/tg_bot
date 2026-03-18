@@ -1,5 +1,10 @@
-#include "../include/handlers.h"
 #include <iostream>
+
+#include "../include/handlers.h"
+#include "../include/AuthManager.h"
+
+AuthManager authManager;
+
 
 void registerHandlers(TgBot::Bot& bot)
 {

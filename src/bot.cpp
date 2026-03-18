@@ -14,7 +14,6 @@ void runBot()
     try
     {
         std::cout << "Bot working..." << std::endl;
-
         TgBot::TgLongPoll longPoll(bot);
 
         while (true)
