@@ -17,7 +17,9 @@ add_executable(MyTelegramBot
 
 target_include_directories(MyTelegramBot PRIVATE include)
 
-target_compile_definitions(MyTelegramBot PRIVATE _WIN32_WINNT=0x0A00)
+if(WIN32)
+    target_compile_definitions(MyTelegramBot PRIVATE _WIN32_WINNT=0x0A00)
+endif()
 
 target_link_libraries(MyTelegramBot PRIVATE TgBot::TgBot)
 
