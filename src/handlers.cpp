@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "../include/handlers.h"
-#include "../include/AuthManager.h"
+#include "handlers.h"
+#include "AuthManager.h"
 
 AuthManager authManager;
 
