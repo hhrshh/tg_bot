@@ -15,7 +15,7 @@ add_executable(MyTelegramBot
     src/database.cpp
 )
 
-target_include_directories(MyTelegramBot PRIVATE include)
+target_include_directories(MyTelegramBot PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 if(WIN32)
     target_compile_definitions(MyTelegramBot PRIVATE _WIN32_WINNT=0x0A00)

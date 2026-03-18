@@ -1,9 +1,9 @@
 #include <tgbot/tgbot.h>
 #include <iostream>
-#include "../include/config.h"
+#include "config.h"
 
-#include "../include/bot.h"
-#include "../include/handlers.h"
+#include "bot.h"
+#include "handlers.h"
 
 void runBot()
 {
