@@ -1,95 +1,84 @@
 # Telegram Bot Project (C++)
 
-Минимальный Telegram-бот на C++ с использованием библиотеки [TgBot](https://github.com/reo7sp/tgbot-cpp).  
-Проект организован с CMake, поддерживает обработку команд и echo-сообщения.
+Минимальный Telegram-бот на C++ с использованием [TgBot](https://github.com/reo7sp/tgbot-cpp) и сборкой через CMake.
 
----
+Сейчас в проекте есть:
+- обработка команд `/start` и `/login`;
+- echo-ответ только для авторизованных пользователей;
+- базовое потокобезопасное консольное логирование;
+- явная передача зависимостей (`ILogger`, `IAuthManager`) без глобального состояния в хендлерах.
 
 ## Структура проекта
 
-```
-TelegramBotProject/
+```text
+tg_bot/
 ├─ include/
+│  ├─ authManager.h
 │  ├─ bot.h
-│  ├─ config.h # токен бота (не добавляется в git)
+│  ├─ config.h        # локально, не добавляется в git
 │  ├─ database.h
 │  ├─ handlers.h
-|  ├─ User.h
-|  └─ AuthManager.h
+│  ├─ logger.h
+│  └─ user.h
 ├─ src/
-│  ├─ main.cpp
 │  ├─ bot.cpp
 │  ├─ database.cpp
-│  └─ handlers.cpp
+│  ├─ handlers.cpp
+│  ├─ logger.cpp
+│  └─ main.cpp
 ├─ CMakeLists.txt
-└─ .gitignore
+└─ readme.md
 ```
 
-- `main.cpp` — точка входа, вызывает функцию запуска бота.
-- `bot.cpp/h` — инициализация и запуск TgBot.
-- `handlers.cpp/h` — обработка команд и сообщений.
-- `database.cpp/h` — инициализация базы данных (пока заглушка).
-- `config.h` — содержит токен бота (не хранить в репозитории).
-
----
+Ключевые модули:
+- `src/main.cpp` — точка входа, вызывает `runBot()`.
+- `src/bot.cpp` — инициализирует `TgBot::Bot`, создает `ConsoleLogger` и `AuthManager`, регистрирует хендлеры.
+- `src/handlers.cpp` — команды и сообщения; зависимости принимаются через параметры `registerHandlers(...)`.
+- `include/authManager.h` — интерфейс `IAuthManager` и текущая in-memory реализация `AuthManager`.
+- `src/logger.cpp` — реализация `ILogger` с timestamp и уровнями логирования.
+- `src/database.cpp` — заглушка инициализации БД.
 
 ## Установка и сборка
 
-### 1. Клонирование репозитория
+### 1. Клонирование
 ```bash
 git clone https://github.com/hhrshh/tg_bot
-cd TelegramBotProject
+cd tg_bot
 ```
 
-### 2. Создание файла с токеном
-Создайте файл `include/config.h` с вашим токеном:
+### 2. Создание `include/config.h`
 ```cpp
 #pragma once
 
 #define BOT_TOKEN "ВАШ_ТОКЕН_ЗДЕСЬ"
 ```
 
-### 3. Сборка с CMake
+### 3. Сборка
 ```bash
-mkdir build
-cmake -B build
+cmake -S . -B build
 cmake --build build
 ```
 
-### 4. Запуск бота
+### 4. Запуск
 ```bash
-# Linux
-./MyTelegramBot
-
-# Windows
-MyTelegramBot.exe
+./build/MyTelegramBot
 ```
-
----
 
 ## Использование
 
-- `/start` — запускает бота и выводит приветственное сообщение.
-- Все остальные сообщения — бот отвечает echo-сообщением.
+1. Отправьте `/start`.
+2. Авторизуйтесь командой `/login`.
+3. После этого обычные текстовые сообщения будут возвращаться как `Echo: ...`.
 
-Пример:
-```
-Пользователь: Привет!
-Бот: Echo: Привет!
-```
-
----
+Если пользователь не авторизован, бот попросит сначала выполнить `/login`.
 
 ## Планы по развитию
 
-- Подключение реальной базы данных (SQLite/MySQL/PostgreSQL)
-- Добавление inline-кнопок и callback-обработчиков
-- Логирование и обработка ошибок
-- Поддержка команд через карту команд для удобного расширения
-
----
+- Перенести `IAuthManager` на БД-backed реализацию.
+- Добавить unit-тесты для хендлеров с `FakeAuthManager`/`MockAuthManager`.
+- Реализовать полноценный persistence для пользователей.
+- Добавить inline-кнопки и callback-обработчики.
 
 ## Лицензия
 
-MIT License
-
+MIT

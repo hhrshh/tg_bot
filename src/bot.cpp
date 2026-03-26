@@ -1,19 +1,24 @@
 #include <tgbot/tgbot.h>
-#include <iostream>
 #include "config.h"
 
 #include "bot.h"
+#include "authManager.h"
 #include "handlers.h"
+#include "logger.h"
 
 void runBot()
 {
+    ConsoleLogger logger;
+    logger.info("bot", "initializing");
+    AuthManager authManager;
+
     TgBot::Bot bot(BOT_TOKEN);
 
-    registerHandlers(bot);
+    registerHandlers(bot, logger, authManager);
 
     try
     {
-        std::cout << "Bot working..." << std::endl;
+        logger.info("bot", "bot working");
         TgBot::TgLongPoll longPoll(bot);
 
         while (true)
@@ -23,6 +28,6 @@ void runBot()
     }
     catch (TgBot::TgException& e)
     {
-        std::cerr << "Error: " << e.what() << std::endl;
+        logger.error("bot", std::string("exception: ") + e.what());
     }
 }

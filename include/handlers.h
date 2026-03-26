@@ -2,4 +2,7 @@
 
 #include <tgbot/tgbot.h>
 
-void registerHandlers(TgBot::Bot& bot);
+class ILogger;
+class IAuthManager;
+
+void registerHandlers(TgBot::Bot& bot, ILogger& logger, IAuthManager& authManager);

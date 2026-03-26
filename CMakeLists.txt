@@ -12,6 +12,7 @@ add_executable(MyTelegramBot
     src/main.cpp
     src/bot.cpp
     src/handlers.cpp
+    src/logger.cpp
     src/database.cpp
 )
 
