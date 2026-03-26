@@ -14,6 +14,22 @@ void runBot()
 
     TgBot::Bot bot(BOT_TOKEN);
 
+    bot.getApi().deleteMyCommands();
+
+    std::vector<TgBot::BotCommand::Ptr> commands;
+
+    auto loginCmd = std::make_shared<TgBot::BotCommand>();
+    loginCmd->command = "login";
+    loginCmd->description = "Авторизоваться";
+    commands.push_back(loginCmd);
+
+    auto logoutCmd = std::make_shared<TgBot::BotCommand>();
+    logoutCmd->command = "logout";
+    logoutCmd->description = "Выйти из аккаунта";
+    commands.push_back(logoutCmd);
+
+    bot.getApi().setMyCommands(commands);
+
     registerHandlers(bot, logger, authManager);
 
     try
