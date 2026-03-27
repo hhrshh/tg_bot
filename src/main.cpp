@@ -1,5 +1,5 @@
 #include <iostream>
-#include "../include/bot.h"
+#include "bot.h"
 
 int main()
 {

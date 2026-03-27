@@ -13,10 +13,30 @@ namespace {
         const std::string userName = message->from->username.empty() ? "<empty>" : message->from->username;
         return "userName=" + userName + " userId=" + std::to_string(message->from->id);
     }
+
+    std::string normalizeCommand(const std::string& text) {
+        if (text.empty() || text[0] != '/') {
+            return "";
+        }
+
+        std::string cmd = text.substr(1);
+        auto spacePos = cmd.find(' ');
+        if (spacePos != std::string::npos) {
+            cmd = cmd.substr(0, spacePos);
+        }
+
+        auto atPos = cmd.find('@');
+        if (atPos != std::string::npos) {
+            cmd = cmd.substr(0, atPos);
+        }
+
+        return cmd;
+    }    
 } // namespace
 
 void registerHandlers(TgBot::Bot& bot, ILogger& logger, IAuthManager& authManager)
 {
+
     bot.getEvents().onCommand("start", [&bot, &logger](TgBot::Message::Ptr message) {
         logger.info("handlers", "/start received " + describeUser(message));
 
@@ -44,7 +64,7 @@ void registerHandlers(TgBot::Bot& bot, ILogger& logger, IAuthManager& authManage
     });
 
 
-        bot.getEvents().onCommand("logout", [&bot, &logger, &authManager](TgBot::Message::Ptr message) {
+    bot.getEvents().onCommand("logout", [&bot, &logger, &authManager](TgBot::Message::Ptr message) {
         logger.info("handlers", "/logout received " + describeUser(message));
 
         if (!message || !message->chat || !message->from) {
@@ -70,9 +90,21 @@ void registerHandlers(TgBot::Bot& bot, ILogger& logger, IAuthManager& authManage
         bot.getApi().sendMessage(message->chat->id, "Вы вышли!");
     });
 
+
     bot.getEvents().onAnyMessage([&bot, &logger, &authManager](TgBot::Message::Ptr message) {
         if (!message || !message->chat || !message->from) {
             logger.warn("handlers", "message skipped: message/chat/from is null");
+            return;
+        }
+
+        if (message->text[0] == '/') {
+            const std::string cmd = normalizeCommand(message->text);
+
+            if (cmd != "start" && cmd != "login" && cmd != "logout") {
+                logger.warn("handlers", "unknown command: " + cmd);
+                bot.getApi().sendMessage(message->chat->id, "Неизвестная команда");
+            }
+
             return;
         }
 
