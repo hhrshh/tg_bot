@@ -97,6 +97,11 @@ void registerHandlers(TgBot::Bot& bot, ILogger& logger, IAuthManager& authManage
             return;
         }
 
+        if (message->text.empty()) {
+            logger.info("handlers", "message skipped: empty text " + describeUser(message));
+            return;
+        }
+
         if (message->text[0] == '/') {
             const std::string cmd = normalizeCommand(message->text);
 
@@ -105,16 +110,6 @@ void registerHandlers(TgBot::Bot& bot, ILogger& logger, IAuthManager& authManage
                 bot.getApi().sendMessage(message->chat->id, "Неизвестная команда");
             }
 
-            return;
-        }
-
-        if (message->text.empty()) {
-            logger.info("handlers", "message skipped: empty text " + describeUser(message));
-            return;
-        }
-
-        if (message->text[0] == '/') {
-            logger.info("handlers", "message skipped: command text routed to onCommand " + describeUser(message));
             return;
         }
 

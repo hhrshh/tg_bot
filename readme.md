@@ -38,6 +38,10 @@ tg_bot/
 - `src/logger.cpp` — реализация `ILogger` с timestamp и уровнями логирования.
 - `src/database.cpp` — заглушка инициализации БД.
 
+## Поддерживаемая платформа
+
+Linux (Ubuntu/Debian). Windows-поддержка в проекте отключена.
+
 ## Установка и сборка
 
 ### 1. Клонирование
@@ -46,20 +50,29 @@ git clone https://github.com/hhrshh/tg_bot
 cd tg_bot
 ```
 
-### 2. Создание `include/config.h`
+### 2. Запуск установщика
+```bash
+chmod +x ./install.sh
+./install.sh
+```
+
+Скрипт:
+- установит системные зависимости;
+- поставит `tgbot-cpp` (если не найден в системе);
+- подготовит файлы проекта (`.env.postgres`, `secrets/postgres_password.txt`, `include/config.h`);
+- поднимет PostgreSQL через `docker compose`;
+- соберет проект.
+
+### 3. Указать токен бота
+
+Откройте `include/config.h` и замените значение `BOT_TOKEN`:
 ```cpp
 #pragma once
 
 #define BOT_TOKEN "ВАШ_ТОКЕН_ЗДЕСЬ"
 ```
 
-### 3. Сборка
-```bash
-cmake -S . -B build
-cmake --build build
-```
-
-### 4. Запуск
+### 4. Запуск бота
 ```bash
 ./build/MyTelegramBot
 ```

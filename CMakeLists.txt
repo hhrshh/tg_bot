@@ -6,7 +6,13 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+if(NOT UNIX)
+    message(FATAL_ERROR "This project currently supports Linux/Unix only.")
+endif()
+
 find_package(TgBot CONFIG REQUIRED)
+find_package(CURL REQUIRED)
+find_package(Threads REQUIRED)
 
 add_executable(MyTelegramBot
     src/main.cpp
@@ -18,24 +24,6 @@ add_executable(MyTelegramBot
 
 target_include_directories(MyTelegramBot PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
+target_compile_definitions(MyTelegramBot PRIVATE HAVE_CURL)
 
-find_package(CURL REQUIRED)
-
-add_definitions(-DHAVE_CURL)
-
-include_directories(
-    /home/git/tgbot-cpp/include
-    ${CURL_INCLUDE_DIRS}
-)
-
-target_link_libraries(MyTelegramBot PRIVATE ${CURL_LIBRARIES})
-
-if(WIN32)
-    target_compile_definitions(MyTelegramBot PRIVATE _WIN32_WINNT=0x0A00)
-endif()
-
-target_link_libraries(MyTelegramBot PRIVATE TgBot::TgBot)
-
-if(MINGW OR UNIX)
-    target_link_libraries(MyTelegramBot PRIVATE pthread)
-endif()
+target_link_libraries(MyTelegramBot PRIVATE TgBot::TgBot CURL::libcurl Threads::Threads)

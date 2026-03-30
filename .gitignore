@@ -24,5 +24,16 @@ CMakeScripts/
 *.lib
 *.dll
 
+# ======================
 # config с токеном
+# ======================
 include/config.h
+
+# ======================
+# postgreSQL
+# ======================
+.env
+.env.*
+!.env.example
+secrets/
+volume/postgres/
